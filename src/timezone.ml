@@ -212,7 +212,7 @@ module Stable = struct
     let hash = Ppx_hash_lib.Std.Hash.of_fold hash_fold_t
 
     include (
-      Binable.Stable.Of_binable.V1
+      Binable.Stable.Of_binable.V1 [@alert "-legacy"]
         (String)
         (struct
           type nonrec t = t
