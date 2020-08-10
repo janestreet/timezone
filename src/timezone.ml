@@ -82,9 +82,7 @@ module Zone_cache = struct
     let t1_file_size = Option.map (original_filename t1) ~f:file_size in
     with_return (fun r ->
       let return_if_matches zone_name =
-        let filename =
-          String.concat ~sep:"/" [ the_one_and_only.basedir; zone_name ]
-        in
+        let filename = String.concat ~sep:"/" [ the_one_and_only.basedir; zone_name ] in
         let matches =
           try
             [%compare.equal: int64 option] t1_file_size (Some (file_size filename))
@@ -188,8 +186,7 @@ module Stable = struct
               of_utc_offset ~hours:offset)
             else find_exn name
           with
-          | exc ->
-            of_sexp_error (sprintf "Timezone.t_of_sexp: %s" (Exn.to_string exc)) sexp)
+          | exc -> of_sexp_error (sprintf "Timezone.t_of_sexp: %s" (Exn.to_string exc)) sexp)
       | _ -> of_sexp_error "Timezone.t_of_sexp: expected atom" sexp
     ;;
 

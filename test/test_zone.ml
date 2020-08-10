@@ -31,9 +31,7 @@ let%test_module "Zone.V1" =
          ]
        ;;
 
-       let%test_unit "special form [Local]" =
-         ignore (t_of_sexp (Sexp.of_string "Local") : t)
-       ;;
+       let%test_unit "special form [Local]" = ignore (t_of_sexp (Sexp.of_string "Local") : t)
      end))
 ;;
 
@@ -51,9 +49,7 @@ let%test_module "Zone.V1" =
          ]
        ;;
 
-       let%test_unit "special form [Local]" =
-         ignore (t_of_sexp (Sexp.of_string "Local") : t)
-       ;;
+       let%test_unit "special form [Local]" = ignore (t_of_sexp (Sexp.of_string "Local") : t)
      end))
 ;;
 
@@ -188,8 +184,7 @@ let%test_module "clock shift stuff" =
       [%test_result: Date.t] ~expect:date d;
       [%test_result: Time.Ofday.t] ~expect:ofday o;
       [%test_result: to_date_ofday_ambiguity]
-        ~expect:
-          (`Also_skipped (date, Option.value_exn (Time.Ofday.sub o Time.Span.hour)))
+        ~expect:(`Also_skipped (date, Option.value_exn (Time.Ofday.sub o Time.Span.hour)))
         a
     ;;
 
