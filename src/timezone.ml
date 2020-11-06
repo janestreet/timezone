@@ -68,8 +68,8 @@ module Zone_cache = struct
 
   let to_alist () = Hashtbl.to_alist the_one_and_only.table
 
-  let initialized_zones t =
-    List.sort ~compare:(fun a b -> String.ascending (fst a) (fst b)) (to_alist t)
+  let initialized_zones () =
+    List.sort ~compare:(fun a b -> String.ascending (fst a) (fst b)) (to_alist ())
   ;;
 
   let find_or_load_matching t1 =
