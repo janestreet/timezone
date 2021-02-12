@@ -49,9 +49,10 @@ module Zone_cache = struct
           let relative_fn = String.drop_prefix fn basedir_len in
           match Sys.is_directory fn with
           | true ->
-            if not
-                 (List.exists skip_prefixes ~f:(fun prefix ->
-                    String.is_prefix ~prefix relative_fn))
+            if
+              not
+                (List.exists skip_prefixes ~f:(fun prefix ->
+                   String.is_prefix ~prefix relative_fn))
             then dfs fn (depth - 1)
           | false -> f relative_fn)
     in
@@ -159,34 +160,35 @@ module Stable = struct
       match sexp with
       | Sexp.Atom "Local" -> Lazy.force local
       | Sexp.Atom name ->
-        ((* This special handling is needed because the offset directionality of the
-            zone files in /usr/share/zoneinfo for GMT<offset> files is the reverse of
-            what is generally expected.  That is, GMT+5 is what most people would call
-            GMT-5. *)
-          try
-            if String.is_prefix name ~prefix:"GMT-"
-            || String.is_prefix name ~prefix:"GMT+"
-            || String.is_prefix name ~prefix:"UTC-"
-            || String.is_prefix name ~prefix:"UTC+"
-            || String.equal name "GMT"
-            || String.equal name "UTC"
-            then (
-              let offset =
-                if String.equal name "GMT" || String.equal name "UTC"
-                then 0
-                else (
-                  let base =
-                    Int.of_string (String.sub name ~pos:4 ~len:(String.length name - 4))
-                  in
-                  match name.[3] with
-                  | '-' -> -1 * base
-                  | '+' -> base
-                  | _ -> assert false)
-              in
-              of_utc_offset ~hours:offset)
-            else find_exn name
-          with
-          | exc -> of_sexp_error (sprintf "Timezone.t_of_sexp: %s" (Exn.to_string exc)) sexp)
+        (* This special handling is needed because the offset directionality of the
+           zone files in /usr/share/zoneinfo for GMT<offset> files is the reverse of
+           what is generally expected.  That is, GMT+5 is what most people would call
+           GMT-5. *)
+        (try
+           if
+             String.is_prefix name ~prefix:"GMT-"
+             || String.is_prefix name ~prefix:"GMT+"
+             || String.is_prefix name ~prefix:"UTC-"
+             || String.is_prefix name ~prefix:"UTC+"
+             || String.equal name "GMT"
+             || String.equal name "UTC"
+           then (
+             let offset =
+               if String.equal name "GMT" || String.equal name "UTC"
+               then 0
+               else (
+                 let base =
+                   Int.of_string (String.sub name ~pos:4 ~len:(String.length name - 4))
+                 in
+                 match name.[3] with
+                 | '-' -> -1 * base
+                 | '+' -> base
+                 | _ -> assert false)
+             in
+             of_utc_offset ~hours:offset)
+           else find_exn name
+         with
+         | exc -> of_sexp_error (sprintf "Timezone.t_of_sexp: %s" (Exn.to_string exc)) sexp)
       | _ -> of_sexp_error "Timezone.t_of_sexp: expected atom" sexp
     ;;
 
