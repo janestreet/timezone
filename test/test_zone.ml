@@ -28,6 +28,8 @@ let%test_module "Zone.V1" =
          [ zone "nyc", "America/New_York", "\016America/New_York"
          ; zone "ldn", "Europe/London", "\013Europe/London"
          ; zone "hkg", "Asia/Hong_Kong", "\014Asia/Hong_Kong"
+         ; zone "UTC", "UTC", "\003UTC"
+         ; zone "GMT", "GMT", "\003GMT"
          ]
        ;;
 
