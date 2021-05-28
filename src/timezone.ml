@@ -13,7 +13,7 @@ module Zone_cache = struct
 
   let the_one_and_only =
     { full = false
-    ; basedir = Option.value (Sys.getenv_opt "TZDIR") ~default:"/usr/share/zoneinfo/"
+    ; basedir = Option.value (Sys.getenv "TZDIR") ~default:"/usr/share/zoneinfo/"
     ; table = String.Table.create ()
     }
   ;;
@@ -44,10 +44,10 @@ module Zone_cache = struct
       if depth < 1
       then ()
       else
-        Array.iter (Sys.readdir dir) ~f:(fun fn ->
+        Array.iter (Caml.Sys.readdir dir) ~f:(fun fn ->
           let fn = dir ^ "/" ^ fn in
           let relative_fn = String.drop_prefix fn basedir_len in
-          match Sys.is_directory fn with
+          match Caml.Sys.is_directory fn with
           | true ->
             if
               not
@@ -132,7 +132,7 @@ let find_exn zone =
 let local =
   (* Load [TZ] immediately so that subsequent modifications to the environment cannot
      alter the result of [force local]. *)
-  let local_zone_name = Sys.getenv_opt "TZ" in
+  let local_zone_name = Sys.getenv "TZ" in
   let load () =
     match local_zone_name with
     | Some zone_name -> find_exn zone_name
