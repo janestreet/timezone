@@ -1,6 +1,6 @@
-open Core_kernel
+open Core
 include Timezone_intf
-include Core_kernel_private.Time_zone
+include Core_private.Time_zone
 
 module type Extend_zone = Timezone_intf.Extend_zone
 
@@ -151,7 +151,7 @@ let local =
 ;;
 
 module Stable = struct
-  include Core_kernel_private.Time_zone.Stable
+  include Core_private.Time_zone.Stable
 
   module V1 = struct
     type nonrec t = t

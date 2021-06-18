@@ -1,10 +1,10 @@
-open Core_kernel
+open Core
 open Poly
 
 module Time = struct
   include Time
 
-  let sexp_of_t x = Sexp.Atom (Time.to_string x)
+  let sexp_of_t x = Sexp.Atom (Time.to_string_utc x)
 end
 
 let%test _ =
