@@ -49,10 +49,9 @@ module Zone_cache = struct
           let relative_fn = String.drop_prefix fn basedir_len in
           match Caml.Sys.is_directory fn with
           | true ->
-            if
-              not
-                (List.exists skip_prefixes ~f:(fun prefix ->
-                   String.is_prefix ~prefix relative_fn))
+            if not
+                 (List.exists skip_prefixes ~f:(fun prefix ->
+                    String.is_prefix ~prefix relative_fn))
             then dfs fn (depth - 1)
           | false -> f relative_fn)
     in
@@ -163,11 +162,10 @@ module Stable = struct
         (try
            if String.equal name "UTC" || String.equal name "GMT"
            then of_utc_offset_explicit_name ~name ~hours:0
-           else if
-             (* This special handling is needed because the offset directionality of the
-                zone files in /usr/share/zoneinfo for GMT<offset> files is the reverse of
-                what is generally expected.  That is, GMT+5 is what most people would call
-                GMT-5. *)
+           else if (* This special handling is needed because the offset directionality of the
+                      zone files in /usr/share/zoneinfo for GMT<offset> files is the reverse of
+                      what is generally expected.  That is, GMT+5 is what most people would call
+                      GMT-5. *)
              String.is_prefix name ~prefix:"GMT-"
              || String.is_prefix name ~prefix:"GMT+"
              || String.is_prefix name ~prefix:"UTC-"
