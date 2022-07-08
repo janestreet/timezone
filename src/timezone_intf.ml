@@ -50,12 +50,12 @@ end
 module type Timezone = sig
   module type Extend_zone = Extend_zone
 
-  include Core_private.Time_zone.S with type t = Time.Zone.t
+  include Core_private.Time_zone.S with type t = Time_float.Zone.t
   include Extend_zone with type t := t
 
   module Stable : sig
     module V1 : sig
-      type nonrec t = t [@@deriving bin_io, compare, hash, sexp]
+      type nonrec t = t [@@deriving bin_io, compare, hash, sexp, stable_witness]
     end
 
     include Core_private.Time_zone.S_stable with type t := t
@@ -71,7 +71,7 @@ module type Timezone = sig
       type z =
         { mutable full : bool
         ; basedir : string
-        ; table : Time.Zone.t String.Table.t
+        ; table : Time_float.Zone.t String.Table.t
         }
 
       val the_one_and_only : z

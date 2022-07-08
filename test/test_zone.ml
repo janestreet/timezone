@@ -2,9 +2,9 @@ open Core
 open Poly
 
 module Time = struct
-  include Time
+  include Time_float
 
-  let sexp_of_t x = Sexp.Atom (Time.to_string_utc x)
+  let sexp_of_t x = Sexp.Atom (Time_float.to_string_utc x)
 end
 
 let%test _ =

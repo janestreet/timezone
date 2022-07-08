@@ -205,22 +205,29 @@ module Stable = struct
     let hash_fold_t state t = String.hash_fold_t state (to_string t)
     let hash = Ppx_hash_lib.Std.Hash.of_fold hash_fold_t
 
+    let to_binable t =
+      let name = name t in
+      if String.equal name "/etc/localtime"
+      then failwith "the local time zone cannot be serialized";
+      name
+    ;;
+
+    let of_binable s = t_of_sexp (Sexp.Atom s)
+
     include (
       Binable.Stable.Of_binable.V1 [@alert "-legacy"]
         (String)
         (struct
           type nonrec t = t
 
-          let to_binable t =
-            let name = name t in
-            if String.equal name "/etc/localtime"
-            then failwith "the local time zone cannot be serialized";
-            name
-          ;;
-
-          let of_binable s = t_of_sexp (Sexp.Atom s)
+          let to_binable = to_binable
+          let of_binable = of_binable
         end) :
         Binable.S with type t := t)
+
+    let stable_witness =
+      Stable_witness.of_serializable String.Stable.V1.stable_witness of_binable to_binable
+    ;;
   end
 end
 
