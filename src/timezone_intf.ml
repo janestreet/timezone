@@ -1,7 +1,7 @@
 open Core
 
 module type Extend_zone = sig
-  type t
+  type t [@@deriving sexp_grammar]
 
   include Identifiable.S with type t := t
 

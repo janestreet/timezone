@@ -281,3 +281,21 @@ let%test_module "clock shift stuff" =
     ;;
   end)
 ;;
+
+let%expect_test "grammar" =
+  Sexp_grammar_validation.validate_grammar
+    (module struct
+      include Timezone
+
+      let quickcheck_generator =
+        Timezone.init ();
+        Quickcheck.Generator.of_list (Timezone.initialized_zones () |> List.map ~f:snd)
+      ;;
+
+      let quickcheck_observer = [%quickcheck.observer: _]
+      let quickcheck_shrinker = [%quickcheck.shrinker: _]
+    end)
+  |> Expect_test_helpers_core.require_ok [%here];
+  [%expect
+    {| (Tagged ((key sexp_grammar.type_name) (value Timezone.t) (grammar String))) |}]
+;;

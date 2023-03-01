@@ -44,10 +44,10 @@ module Zone_cache = struct
       if depth < 1
       then ()
       else
-        Array.iter (Caml.Sys.readdir dir) ~f:(fun fn ->
+        Array.iter (Stdlib.Sys.readdir dir) ~f:(fun fn ->
           let fn = dir ^ "/" ^ fn in
           let relative_fn = String.drop_prefix fn basedir_len in
-          match Caml.Sys.is_directory fn with
+          match Stdlib.Sys.is_directory fn with
           | true ->
             if not
                  (List.exists skip_prefixes ~f:(fun prefix ->
@@ -194,6 +194,16 @@ module Stable = struct
       Sexp.Atom name
     ;;
 
+    let t_sexp_grammar : t Sexplib.Sexp_grammar.t =
+      { untyped =
+          Tagged
+            { key = Sexplib.Sexp_grammar.type_name_tag
+            ; value = Atom "Timezone.t"
+            ; grammar = String
+            }
+      }
+    ;;
+
     include Sexpable.Stable.To_stringable.V1 (struct
         type nonrec t = t [@@deriving sexp]
       end)
@@ -229,16 +239,20 @@ module Stable = struct
       Stable_witness.of_serializable String.Stable.V1.stable_witness of_binable to_binable
     ;;
   end
+
+  module Current = V1
 end
 
 include Identifiable.Make (struct
     let module_name = "Timezone"
 
-    include Stable.V1
+    include Stable.Current
 
     let of_string = of_string
     let to_string = to_string
   end)
+
+include Stable.Current
 
 module Private = struct
   module Zone_cache = Zone_cache
