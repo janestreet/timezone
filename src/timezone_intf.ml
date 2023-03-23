@@ -55,7 +55,7 @@ module type Timezone = sig
 
   module Stable : sig
     module V1 : sig
-      type nonrec t = t [@@deriving bin_io, compare, hash, sexp, stable_witness]
+      type nonrec t = t [@@deriving bin_io, compare, equal, hash, sexp, stable_witness]
     end
 
     include Core_private.Time_zone.S_stable with type t := t

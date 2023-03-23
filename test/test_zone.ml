@@ -28,26 +28,10 @@ let%test_module "Zone.V1" =
          [ zone "nyc", "America/New_York", "\016America/New_York"
          ; zone "ldn", "Europe/London", "\013Europe/London"
          ; zone "hkg", "Asia/Hong_Kong", "\014Asia/Hong_Kong"
+         ; zone "tyo", "Asia/Tokyo", "\nAsia/Tokyo"
+         ; zone "chi", "America/Chicago", "\015America/Chicago"
          ; zone "UTC", "UTC", "\003UTC"
          ; zone "GMT", "GMT", "\003GMT"
-         ]
-       ;;
-
-       let%test_unit "special form [Local]" = ignore (t_of_sexp (Sexp.of_string "Local") : t)
-     end))
-;;
-
-let%test_module "Zone.V1" =
-  (module Stable_unit_test.Make (struct
-       include Timezone.Stable.V1
-
-       let equal z1 z2 = Time.Zone.name z1 = Time.Zone.name z2
-
-       let tests =
-         let zone = Timezone.find_exn in
-         [ zone "nyc", "America/New_York", "\016America/New_York"
-         ; zone "ldn", "Europe/London", "\013Europe/London"
-         ; zone "hkg", "Asia/Hong_Kong", "\014Asia/Hong_Kong"
          ]
        ;;
 
@@ -96,7 +80,6 @@ let%test_module "next_clock_shift, prev_clock_shift" =
     let bst_start = mkt ~year:2013 Mar 31 01 00, Span.hour
     let bst_end = mkt ~year:2013 Oct 27 01 00, Span.(neg hour)
     let bst_start_2014 = mkt ~year:2014 Mar 30 01 00, Span.hour
-
     let%test_unit "outside BST" = expect_next (mkt Jan 01 12 00) bst_start
     let%test_unit "just before BST start" = expect_next (mkt Mar 31 00 59) bst_start
     let%test_unit "on BST start time" = expect_next (mkt Mar 31 01 00) bst_end
@@ -292,7 +275,6 @@ let%expect_test "grammar" =
         Quickcheck.Generator.of_list (Timezone.initialized_zones () |> List.map ~f:snd)
       ;;
 
-      let quickcheck_observer = [%quickcheck.observer: _]
       let quickcheck_shrinker = [%quickcheck.shrinker: _]
     end)
   |> Expect_test_helpers_core.require_ok [%here];

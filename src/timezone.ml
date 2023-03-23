@@ -183,7 +183,8 @@ module Stable = struct
              of_utc_offset_explicit_name ~name ~hours:offset)
            else find_exn name
          with
-         | exc -> of_sexp_error (sprintf "Timezone.t_of_sexp: %s" (Exn.to_string exc)) sexp)
+         | exc ->
+           of_sexp_error (sprintf "Timezone.t_of_sexp: %s" (Exn.to_string exc)) sexp)
       | _ -> of_sexp_error "Timezone.t_of_sexp: expected atom" sexp
     ;;
 
@@ -212,6 +213,7 @@ module Stable = struct
        the outside world that would allow the construction of two Zone's with the same
        name and different transitions. *)
     let compare t1 t2 = String.compare (to_string t1) (to_string t2)
+    let equal t1 t2 = String.equal (to_string t1) (to_string t2)
     let hash_fold_t state t = String.hash_fold_t state (to_string t)
     let hash = Ppx_hash_lib.Std.Hash.of_fold hash_fold_t
 
