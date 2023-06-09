@@ -47,6 +47,8 @@ For example, one can embed all timezones in `all-tz.js` with the following comma
 grep -r TZif /usr/share/zoneinfo -l | xargs -n 1 -I {} echo {}:{} | xargs jsoo_fs -o all-tz.js
 ```
 
+Alternatively, follow the instructions on [timezone-web](https://timezone-web/) to use
+the hosted copy of the entire timezone database.
 
 
 ## Example
