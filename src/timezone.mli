@@ -1,1 +1,1 @@
-include Timezone_intf.Timezone
+include Timezone_intf.Timezone (** @inline *)
