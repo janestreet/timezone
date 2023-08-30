@@ -166,10 +166,10 @@ module Stable = struct
                       zone files in /usr/share/zoneinfo for GMT<offset> files is the reverse of
                       what is generally expected.  That is, GMT+5 is what most people would call
                       GMT-5. *)
-             String.is_prefix name ~prefix:"GMT-"
-             || String.is_prefix name ~prefix:"GMT+"
-             || String.is_prefix name ~prefix:"UTC-"
-             || String.is_prefix name ~prefix:"UTC+"
+                   String.is_prefix name ~prefix:"GMT-"
+                   || String.is_prefix name ~prefix:"GMT+"
+                   || String.is_prefix name ~prefix:"UTC-"
+                   || String.is_prefix name ~prefix:"UTC+"
            then (
              let offset =
                let base =
@@ -206,8 +206,8 @@ module Stable = struct
     ;;
 
     include Sexpable.Stable.To_stringable.V1 (struct
-        type nonrec t = t [@@deriving sexp]
-      end)
+      type nonrec t = t [@@deriving sexp]
+    end)
 
     (* The correctness of these relies on not exposing raw loading/creation functions to
        the outside world that would allow the construction of two Zone's with the same
@@ -235,7 +235,7 @@ module Stable = struct
           let to_binable = to_binable
           let of_binable = of_binable
         end) :
-        Binable.S with type t := t)
+          Binable.S with type t := t)
 
     let stable_witness =
       Stable_witness.of_serializable String.Stable.V1.stable_witness of_binable to_binable
@@ -246,13 +246,13 @@ module Stable = struct
 end
 
 include Identifiable.Make (struct
-    let module_name = "Timezone"
+  let module_name = "Timezone"
 
-    include Stable.Current
+  include Stable.Current
 
-    let of_string = of_string
-    let to_string = to_string
-  end)
+  let of_string = of_string
+  let to_string = to_string
+end)
 
 include Stable.Current
 

@@ -19,24 +19,24 @@ let%test _ =
 
 let%test_module "Zone.V1" =
   (module Stable_unit_test.Make (struct
-       include Timezone.Stable.V1
+    include Timezone.Stable.V1
 
-       let equal z1 z2 = Time.Zone.name z1 = Time.Zone.name z2
+    let equal z1 z2 = Time.Zone.name z1 = Time.Zone.name z2
 
-       let tests =
-         let zone = Timezone.find_exn in
-         [ zone "nyc", "America/New_York", "\016America/New_York"
-         ; zone "ldn", "Europe/London", "\013Europe/London"
-         ; zone "hkg", "Asia/Hong_Kong", "\014Asia/Hong_Kong"
-         ; zone "tyo", "Asia/Tokyo", "\nAsia/Tokyo"
-         ; zone "chi", "America/Chicago", "\015America/Chicago"
-         ; zone "UTC", "UTC", "\003UTC"
-         ; zone "GMT", "GMT", "\003GMT"
-         ]
-       ;;
+    let tests =
+      let zone = Timezone.find_exn in
+      [ zone "nyc", "America/New_York", "\016America/New_York"
+      ; zone "ldn", "Europe/London", "\013Europe/London"
+      ; zone "hkg", "Asia/Hong_Kong", "\014Asia/Hong_Kong"
+      ; zone "tyo", "Asia/Tokyo", "\nAsia/Tokyo"
+      ; zone "chi", "America/Chicago", "\015America/Chicago"
+      ; zone "UTC", "UTC", "\003UTC"
+      ; zone "GMT", "GMT", "\003GMT"
+      ]
+    ;;
 
-       let%test_unit "special form [Local]" = ignore (t_of_sexp (Sexp.of_string "Local") : t)
-     end))
+    let%test_unit "special form [Local]" = ignore (t_of_sexp (Sexp.of_string "Local") : t)
+  end))
 ;;
 
 let%test_module "next_clock_shift, prev_clock_shift" =
