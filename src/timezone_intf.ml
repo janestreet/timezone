@@ -11,6 +11,7 @@ module type Extend_zone = sig
       - chi -> America/Chicago
       - nyc -> America/New_York
       - hkg -> Asia/Hong_Kong
+      - ldn -> Europe/London
       - lon -> Europe/London
       - tyo -> Asia/Tokyo *)
   val find : string -> t option
