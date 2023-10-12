@@ -56,7 +56,8 @@ module type Timezone = sig
 
   module Stable : sig
     module V1 : sig
-      type nonrec t = t [@@deriving bin_io, compare, equal, hash, sexp, stable_witness]
+      type nonrec t = t
+      [@@deriving bin_io, compare, equal, hash, sexp, sexp_grammar, stable_witness]
 
       include Stringable.S with type t := t
     end
