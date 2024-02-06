@@ -1,3 +1,5 @@
-(library (name timezone_test)
+(library
+ (name timezone_test)
  (libraries core expect_test_helpers_core timezone sexp_grammar_validation)
- (preprocess (pps ppx_jane)))
+ (preprocess
+  (pps ppx_jane)))

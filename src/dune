@@ -1,3 +1,8 @@
-(library (name timezone) (public_name timezone)
- (js_of_ocaml (javascript_files runtime.js)) (libraries core)
- (preprocess (pps ppx_jane)))
+(library
+ (name timezone)
+ (public_name timezone)
+ (js_of_ocaml
+  (javascript_files runtime.js))
+ (libraries core)
+ (preprocess
+  (pps ppx_jane)))
