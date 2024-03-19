@@ -240,6 +240,10 @@ module Stable = struct
     let stable_witness =
       Stable_witness.of_serializable String.Stable.V1.stable_witness of_binable to_binable
     ;;
+
+    include Diffable.Atomic.Make (struct
+      type nonrec t = t [@@deriving sexp, bin_io, equal]
+    end)
   end
 
   module Current = V1

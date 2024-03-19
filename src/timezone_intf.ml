@@ -4,6 +4,7 @@ module type Extend_zone = sig
   type t [@@deriving sexp_grammar]
 
   include Identifiable.S with type t := t
+  include Diffable.S_atomic with type t := t
 
   (** [find name] looks up a [t] by its name and returns it.  This also accepts some
       aliases, including:
@@ -60,6 +61,7 @@ module type Timezone = sig
       [@@deriving bin_io, compare, equal, hash, sexp, sexp_grammar, stable_witness]
 
       include Stringable.S with type t := t
+      include Diffable.S with type t := t and type Diff.t = Diff.t
     end
 
     include Core_private.Time_zone.S_stable with type t := t
