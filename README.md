@@ -25,47 +25,11 @@ In a JavaScript context, we automatically set the environment variable
 
 ## Compatibility with JavaScript.
 
-The [Timezone] library can be used when constructing JavaScript
-applications with
+The [Timezone] library can be used when constructing JavaScript applications with
 [Js_of_ocaml](https://github.com/ocsigen/js_of_ocaml/).
 
-### Node.js
-[Timezone] should work out of the box when running on a Node.js
-environment on Linux or macOS. The file-system is accessible in that
-case.
-
-### Web browsers
-In a web browser environment, the [Timezone] library requires some
-additional setup. One should generate a JavaScript file that will
-embed all timezone data required by the application. This can be done
-by using a tool provided by `js_of_ocaml` called `jsoo_fs`. The
-generated JavaScript file will have to be included in the HTML page
-before the JavaScript program itself.
-
-For example, one can embed all timezones in `all-tz.js` with the following command:
-```sh
-grep -r TZif /usr/share/zoneinfo -l | xargs -n 1 -I {} echo {}:{} | xargs jsoo_fs -o all-tz.js
-```
-
-Alternatively, follow the instructions on [timezone-web](https://timezone-web/) to use
-the hosted copy of the entire timezone database.
-
-
-## Example
-
-```ocaml
-open Core
-
-let now = Time_ns.now ()
-
-let () =
-  Time_ns.to_sec_string now ~zone:(Lazy.force (Timezone.local))
-  |> print_endline
-
-let () =
-  Time_ns.to_sec_string now ~zone:(Timezone.find_exn "America/New_York")
-  |> print_endline
-```
+In the past, web browsers needed to be provided with a copy of the timezone database, but
+this is no longer required.
 
 ------
 

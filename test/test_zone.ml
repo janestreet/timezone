@@ -39,19 +39,64 @@ let%test_module "Zone.V1" =
   end))
 ;;
 
+module Common_dates = struct
+  let mkt ?(year = 2013) month day hr min =
+    let ofday_mins = (hr * 60) + min in
+    let ofday =
+      Time.Span.of_sec (Float.of_int (ofday_mins * 60))
+      |> Time.Ofday.of_span_since_start_of_day_exn
+    in
+    let date = Date.create_exn ~y:year ~m:month ~d:day in
+    Time.of_date_ofday date ofday ~zone:Time.Zone.utc
+  ;;
+
+  let bst_start = mkt ~year:2013 Mar 31 01 00, Time.Span.hour
+  let bst_end = mkt ~year:2013 Oct 27 01 00, Time.Span.(neg hour)
+  let bst_start_2014 = mkt ~year:2014 Mar 30 01 00, Time.Span.hour
+end
+
+let%test_module "differences in abbreviations between native and js" =
+  (module struct
+    open Common_dates
+
+    let print_abbrev ~zone ~time =
+      let time_in_seconds =
+        time
+        |> Time.to_span_since_epoch
+        |> Time.Span.to_int63_seconds_round_down_exn
+        |> Timezone.Time_in_seconds.Span.of_int63_seconds
+        |> Timezone.Time_in_seconds.of_span_since_epoch
+      in
+      let index = Timezone.index zone time_in_seconds in
+      print_endline (Timezone.index_abbreviation_exn zone index)
+    ;;
+
+    let%expect_test ("bst-start native" [@tags "no-js"]) =
+      print_abbrev ~zone:(Timezone.find_exn "Europe/London") ~time:(fst bst_start);
+      [%expect {| BST |}]
+    ;;
+
+    let%expect_test ("bst-start javascript" [@tags "js-only"]) =
+      print_abbrev ~zone:(Timezone.find_exn "Europe/London") ~time:(fst bst_start);
+      [%expect {| |}]
+    ;;
+
+    let%expect_test ("bst-end native" [@tags "no-js"]) =
+      print_abbrev ~zone:(Timezone.find_exn "Europe/London") ~time:(fst bst_end);
+      [%expect {| GMT |}]
+    ;;
+
+    let%expect_test ("bst-end javascript" [@tags "js-only"]) =
+      print_abbrev ~zone:(Timezone.find_exn "Europe/London") ~time:(fst bst_end);
+      [%expect {| |}]
+    ;;
+  end)
+;;
+
 let%test_module "next_clock_shift, prev_clock_shift" =
   (module struct
     module Span = Time.Span
-
-    let mkt ?(year = 2013) month day hr min =
-      let ofday_mins = (hr * 60) + min in
-      let ofday =
-        Span.of_sec (Float.of_int (ofday_mins * 60))
-        |> Time.Ofday.of_span_since_start_of_day_exn
-      in
-      let date = Date.create_exn ~y:year ~m:month ~d:day in
-      Time.of_date_ofday date ofday ~zone:Time.Zone.utc
-    ;;
+    open Common_dates
 
     let%test "UTC" =
       Option.is_none
@@ -77,9 +122,6 @@ let%test_module "next_clock_shift, prev_clock_shift" =
       expect_next time next
     ;;
 
-    let bst_start = mkt ~year:2013 Mar 31 01 00, Span.hour
-    let bst_end = mkt ~year:2013 Oct 27 01 00, Span.(neg hour)
-    let bst_start_2014 = mkt ~year:2014 Mar 30 01 00, Span.hour
     let%test_unit "outside BST" = expect_next (mkt Jan 01 12 00) bst_start
     let%test_unit "just before BST start" = expect_next (mkt Mar 31 00 59) bst_start
     let%test_unit "on BST start time" = expect_next (mkt Mar 31 01 00) bst_end
