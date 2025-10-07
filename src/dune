@@ -1,8 +1,7 @@
 (library
  (name timezone)
  (public_name timezone)
- (js_of_ocaml
-  (javascript_files runtime.js))
- (libraries core)
+ (libraries core ppx_diff.diffable sexplib ppx_stable_witness.stable_witness
+   stdio)
  (preprocess
   (pps ppx_jane)))

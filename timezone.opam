@@ -12,8 +12,12 @@ build: [
 depends: [
   "ocaml" {>= "5.1.0"}
   "core"
+  "ppx_diff"
   "ppx_jane"
-  "dune"     {>= "3.11.0"}
+  "ppx_stable_witness"
+  "sexplib"
+  "stdio"
+  "dune"               {>= "3.17.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Time-zone handling"
