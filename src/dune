@@ -4,4 +4,4 @@
  (libraries core ppx_diff.diffable sexplib ppx_stable_witness.stable_witness
    stdio)
  (preprocess
-  (pps ppx_jane)))
+  (pps ppx_jane -compare-require-explicit-locality)))
