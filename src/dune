@@ -1,7 +1,6 @@
 (library
  (name timezone)
  (public_name timezone)
- (libraries core ppx_diff.diffable sexplib ppx_stable_witness.stable_witness
-   stdio)
+ (libraries core)
  (preprocess
   (pps ppx_jane -compare-require-explicit-locality)))
